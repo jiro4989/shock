@@ -200,9 +200,11 @@ const
     ],
   }.toTable
 
-proc shock(tags: seq[string] = @[], args: seq[string]): int =
+proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
   for arg in args:
     var s: string
+    if useEcho:
+      s.add "echo "
     for ch in arg:
       s.add converters[$ch].sample.val
     echo s
@@ -210,4 +212,4 @@ proc shock(tags: seq[string] = @[], args: seq[string]): int =
 when isMainModule and not defined modeTest:
   import cligen
   clCfg.version = version
-  dispatch(shock)
+  dispatch(shock, short = {"useEcho":'e'})

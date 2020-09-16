@@ -20,6 +20,15 @@ Usage
    $ shock date
    $'\144'$'\141'$'\164'$'\145'
 
+   $ shock helloworld
+   $'\150'$'\145'$'\154'$'\154'$'\157'$'\167'$'\157'$'\162'$'\154'$'\144'
+
+   $ shock -e helloworld
+   echo $'\150'$'\145'$'\154'$'\154'$'\157'$'\167'$'\157'$'\162'$'\154'$'\144'
+
+   $ shock -e helloworld | bash
+   helloworld
+
 Installation
 ============
 
