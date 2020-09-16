@@ -1,4 +1,4 @@
-import tables, random
+import tables, random, os, strutils
 
 type
   Convert = object
@@ -200,14 +200,43 @@ const
     ],
   }.toTable
 
+proc simpleConvert(text: string): string =
+  for ch in text:
+    result.add converters[$ch].sample.val
+
+proc simpleConvert(num: int): string =
+  simpleConvert($num)
+
 proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
+  var varDef: string
+  var varLen = 2
   for arg in args:
     var s: string
     if useEcho:
       s.add "echo "
     for ch in arg:
-      s.add converters[$ch].sample.val
-    echo s
+      var found: bool
+      if ch in 'a'..'z':
+        for path in walkPattern("/*"):
+          if ch in path:
+            let pathStr = path[0] & "?".repeat(path[1..^1].len)
+            var i: int
+            for p in walkPattern(pathStr):
+              if ch in p:
+                break
+              inc i
+            let chIdx = path.find(ch)
+            let v = "_".repeat(varLen)
+            let defStr = v & "=(" & pathStr & ");"
+            varDef.add defStr
+            inc varLen
+            s.add "${" & v & "[" & i.simpleConvert & "]:" & chIdx.simpleConvert & ":$[$$/$$]}"
+            found = true
+            break
+
+      if not found:
+        s.add converters[$ch].sample.val
+    echo varDef & s
 
 when isMainModule and not defined modeTest:
   import cligen
