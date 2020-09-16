@@ -1,6 +1,6 @@
 import unittest
 
-include APPNAME
+include shock
 
 suite "suite":
   test "test":
