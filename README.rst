@@ -4,31 +4,28 @@ shock
 
 |nimble-version| |nimble-install| |gh-actions|
 
-TODO
-
-This is a Nim project template.
-You must run command at first.
-
-.. code-block:: shell
-
-   nim c tool/setup.nim
-   tool/setup --author:<yourname> --appname:<application_name>
-
-This command replace and rename template strings of this repository.
-
 .. contents:: Table of contents
 
 Usage
 =====
 
-TODO
+.. code-block:: shell
+
+   $ shock 0
+   $[]
+
+   $ shock 8
+   $[$[]$[$$/$$]$[]]
+
+   $ shock date
+   $'\144'$'\141'$'\164'$'\145'
 
 Installation
 ============
 
 .. code-block:: shell
 
-   $ nimble install -Y shock
+   $ nimble install -Y https://github.com/jiro4989/shock
 
 LICENSE
 =======
