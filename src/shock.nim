@@ -200,9 +200,12 @@ const
     ],
   }.toTable
 
+proc simpleConvert(ch: char): string =
+  converters[$ch].sample.val
+
 proc simpleConvert(text: string): string =
   for ch in text:
-    result.add converters[$ch].sample.val
+    result.add ch.simpleConvert
 
 proc simpleConvert(num: int): string =
   simpleConvert($num)
@@ -217,7 +220,7 @@ proc indexOfPathnameExpansion(ch: char, path: string): int =
       return
     inc result
 
-proc bashExpansionStringToGetChar(path: string, ch: char, varLen: int): (string, string) =
+proc bashExpressionStringToGetChar(path: string, ch: char, varLen: int): (string, string) =
   let pathStr = path.questionPath
   let i = indexOfPathnameExpansion(ch, pathStr)
   let chIdx = path.find(ch)
@@ -238,7 +241,7 @@ proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
       if ch in 'a'..'z':
         for path in walkPattern("/*"):
           if ch in path:
-            let (defStr, exp) = bashExpansionStringToGetChar(path, ch, varLen)
+            let (defStr, exp) = bashExpressionStringToGetChar(path, ch, varLen)
             varDef.add defStr
             s.add exp
             inc varLen
@@ -246,7 +249,7 @@ proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
             break
 
       if not found:
-        s.add converters[$ch].sample.val
+        s.add ch.simpleConvert
     echo varDef & s
 
 when isMainModule and not defined modeTest:
