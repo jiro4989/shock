@@ -2,6 +2,10 @@ import unittest
 
 include shock
 
-suite "suite":
-  test "test":
-    check true
+suite "proc questionPath":
+  test "/media == /?????":
+    check "/?????" == "/media".questionPath
+  test "/ == /":
+    check "/" == "/".questionPath
+  test "'' == ''":
+    check "" == "".questionPath

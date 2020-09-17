@@ -207,6 +207,25 @@ proc simpleConvert(text: string): string =
 proc simpleConvert(num: int): string =
   simpleConvert($num)
 
+proc questionPath(path: string): string =
+  if path.len < 1: return
+  path[0] & "?".repeat(path[1..^1].len)
+
+proc indexOfPathnameExpansion(ch: char, path: string): int =
+  for p in walkPattern(path):
+    if ch in p:
+      return
+    inc result
+
+proc bashExpansionStringToGetChar(path: string, ch: char, varLen: int): (string, string) =
+  let pathStr = path.questionPath
+  let i = indexOfPathnameExpansion(ch, pathStr)
+  let chIdx = path.find(ch)
+  let varName = "_".repeat(varLen)
+  let varDef = varName & "=(" & pathStr & ");"
+  let exp = "${" & varName & "[" & i.simpleConvert & "]:" & chIdx.simpleConvert & ":$[$$/$$]}"
+  result = (varDef, exp)
+
 proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
   var varDef: string
   var varLen = 2
@@ -219,18 +238,10 @@ proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
       if ch in 'a'..'z':
         for path in walkPattern("/*"):
           if ch in path:
-            let pathStr = path[0] & "?".repeat(path[1..^1].len)
-            var i: int
-            for p in walkPattern(pathStr):
-              if ch in p:
-                break
-              inc i
-            let chIdx = path.find(ch)
-            let v = "_".repeat(varLen)
-            let defStr = v & "=(" & pathStr & ");"
+            let (defStr, exp) = bashExpansionStringToGetChar(path, ch, varLen)
             varDef.add defStr
+            s.add exp
             inc varLen
-            s.add "${" & v & "[" & i.simpleConvert & "]:" & chIdx.simpleConvert & ":$[$$/$$]}"
             found = true
             break
 
