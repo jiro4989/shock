@@ -227,9 +227,9 @@ proc bashExpansionStringToGetChar(path: string, ch: char, varLen: int): (string,
   result = (varDef, exp)
 
 proc shock(useEcho = false, tags: seq[string] = @[], args: seq[string]): int =
-  var varDef: string
-  var varLen = 2
   for arg in args:
+    var varDef: string
+    var varLen = 2
     var s: string
     if useEcho:
       s.add "echo "
